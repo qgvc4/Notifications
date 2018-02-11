@@ -6,7 +6,6 @@
 package taskers;
 
 import javafx.application.Platform;
-
 /**
  *
  * @author dalemusser
@@ -20,7 +19,7 @@ public class Task1 extends Thread {
     
     private int maxValue, notifyEvery;
     boolean exit = false;
-    
+    States state = States.END;
     private Notifiable notificationTarget;
     
     public Task1(int maxValue, int notifyEvery)  {
@@ -31,6 +30,7 @@ public class Task1 extends Thread {
     @Override
     public void run() {
         doNotify("Task1 start.");
+        state = States.RUNNING;
         for (int i = 0; i < maxValue; i++) {
             
             if (i % notifyEvery == 0) {
@@ -38,10 +38,11 @@ public class Task1 extends Thread {
             }
             
             if (exit) {
-                return;
+                break;
             }
         }
         doNotify("Task1 done.");
+        state = States.END;
     }
     
     public void end() {
@@ -56,7 +57,7 @@ public class Task1 extends Thread {
         // this provides the notification through a method on a passed in object (notificationTarget)
         if (notificationTarget != null) {
             Platform.runLater(() -> {
-                notificationTarget.notify(message);
+                notificationTarget.notify(message, state);
             });
         }
     }

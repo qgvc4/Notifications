@@ -5,11 +5,12 @@
  */
 package taskers;
 
+
 /**
  *
  * @author dalemusser
  */
 @FunctionalInterface
 public interface Notifiable {
-    public void notify(String notification);
+    public void notify(String notification, States state);
 }

@@ -5,11 +5,12 @@
  */
 package taskers;
 
+
 /**
  *
  * @author dalemusser
  */
 @FunctionalInterface
 public interface Notification {
-    public void handle(String message);
+    public void handle(String message, States state);
 }

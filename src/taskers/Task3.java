@@ -21,7 +21,8 @@ public class Task3 extends Thread {
     
     private int maxValue, notifyEvery;
     boolean exit = false;
-    
+    States state = States.END;
+    States prevState;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
     public Task3(int maxValue, int notifyEvery)  {
@@ -32,6 +33,7 @@ public class Task3 extends Thread {
     @Override
     public void run() {
         doNotify("Task3 start.");
+        state = States.RUNNING;
         for (int i = 0; i < maxValue; i++) {
             
             if (i % notifyEvery == 0) {
@@ -39,9 +41,10 @@ public class Task3 extends Thread {
             }
             
             if (exit) {
-                return;
+                break;
             }
         }
+        state = States.END;
         doNotify("Task3 done.");
     }
     
@@ -64,6 +67,8 @@ public class Task3 extends Thread {
         Platform.runLater(() -> {
             // I'm choosing not to send the old value (second param).  Sending "" instead.
             pcs.firePropertyChange("message", "", message);
+            pcs.firePropertyChange("state", prevState, state);
+            prevState = state;
         });
     }
 }

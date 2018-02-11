@@ -21,7 +21,7 @@ public class Task2 extends Thread {
     
     private int maxValue, notifyEvery;
     boolean exit = false;
-    
+    States state = States.END;
     private ArrayList<Notification> notifications = new ArrayList<>();
     
     public Task2(int maxValue, int notifyEvery)  {
@@ -31,6 +31,7 @@ public class Task2 extends Thread {
     
     @Override
     public void run() {
+        state = States.RUNNING;
         doNotify("Started Task2!");
         
         for (int i = 0; i < maxValue; i++) {
@@ -40,9 +41,10 @@ public class Task2 extends Thread {
             }
             
             if (exit) {
-                return;
+                break;
             }
         }
+        state = States.END;
         doNotify("Task2 done.");
     }
     
@@ -59,7 +61,7 @@ public class Task2 extends Thread {
         // this provides the notification through the registered notification handler
         for (Notification notification : notifications) {
             Platform.runLater(() -> {
-                notification.handle(message);
+                notification.handle(message, state);
             });
         }
     }
